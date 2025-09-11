@@ -606,3 +606,46 @@ def random_rectangular_partitions(
             .repeat_interleave(w)
     )
     return _quickroll(out, (roll_h, roll_w))
+
+
+def diffmap_from_seg(
+    seg:torch.Tensor, dim:int=1, dtype:torch.dtype=torch.float,
+    vmin:float=-torch.pi/2, vmax:float=torch.pi/2
+) -> torch.Tensor:
+    '''Computes a difference map from a segmentation map.
+
+    Args:
+        seg (torch.Tensor): Segmentation map of shape (B,H,W).
+        dim (int): Dimension to stack differences along.
+        dtype (torch.dtype): Output data type.
+        vmin (float): Minimum value for normalization.
+        vmax (float): Maximum value for normalization.
+
+    Returns:
+        torch.Tensor: Difference map of shape (B,2,H,W) for dim=1.
+    '''
+    B,H,W = seg.shape
+    dw = seg.diff(1,-1,prepend=seg.new_zeros(*([1]*seg.ndim)).expand(B,H,1)) != 0
+    dh = seg.diff(1,-2,prepend=seg.new_zeros(*([1]*seg.ndim)).expand(B,1,W)) != 0
+    d = torch.stack([dw,dh], dim=dim).to(dtype)
+    if vmin != 0.0 or vmax != 1.0:
+        return d.mul_(vmax-vmin).add_(vmin)
+    return d
+
+
+def concatenate_diffmap(
+    img:torch.Tensor, seg:torch.Tensor, vmin:float=-torch.pi/2, vmax:float=torch.pi/2
+) -> torch.Tensor:
+    '''Concatenates difference map to image.
+
+    Args:
+        img (torch.Tensor): Image of shape (B,C,H,W).
+        seg (torch.Tensor): Segmentation map of shape (B,H,W).
+        vmin (float): Minimum value for normalization.
+        vmax (float): Maximum value for normalization.
+
+    Returns:
+        torch.Tensor: Image with difference map concatenated along channel dimension.
+    '''
+    diffmap = diffmap_from_seg(seg, dim=1, dtype=img.dtype, vmin=vmin, vmax=vmax)
+    return torch.cat([img, diffmap], 1)
