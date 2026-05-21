@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Aasan"
+    given-names: "Marius"
+  - family-names: "Kolbjørnsen"
+    given-names: "Odd"
+  - family-names: "Schistad Solberg"
+    given-names: "Anne"
+  - family-names: "Ramírez Rivera"
+    given-names: "Adín"
+title: "A Spitting Image: Modular Superpixel Tokenization in Vision Transformers"
+url: "https://github.com/SFI-Visual-Intelligence/SPiT"
+date-released: 2024-01-01
