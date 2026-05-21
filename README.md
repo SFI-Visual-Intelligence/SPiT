@@ -1,3 +1,5 @@
+Paper: A Spitting Image: Modular Superpixel Tokenization in Vision Transformers ([Link](https://api.nva.unit.no/publication/0198cc41e300-dfda720e-10c3-4e55-8ae1-a45e2d2fc7b6))
+
 <div align="center">
 
 # A Spitting Image: Modular Superpixel Tokenization in Vision Transformers
